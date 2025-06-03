@@ -143,8 +143,8 @@ class VisionTransformer(torch.nn.Module):
 
 
 def setup(rank, world_size):
-    dist.init_process_group(backend="nccl", rank=rank, world_size=world_size)
-    torch.cuda.set_device(rank % torch.cuda.device_count())
+    #dist.init_process_group(backend="nccl", rank=rank, world_size=world_size)
+    #torch.cuda.set_device(rank % torch.cuda.device_count())
 
 
 def cleanup():
