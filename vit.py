@@ -8,6 +8,9 @@ from torch.nn.parallel import DistributedDataParallel as DDP
 import torch.distributed as dist
 import torch.multiprocessing as mp
 from torch.utils.data import DistributedSampler
+import ray
+from ray.train.torch import TorchTrainer
+from ray.air.config import ScalingConfig
 
 
 
@@ -266,6 +269,13 @@ if __name__ == "__main__":
     #ds_test.save_to_disk("/mnt/mofs3/fs/josh/vit/imagenet_preprocessed_validation")
     #world_size = 16
     #mp.spawn(train, args=(world_size,), nprocs=world_size, join=True)
-    rank = int(os.environ["RANK"])
-    world_size = int(os.environ["WORLD_SIZE"])
-    train(rank, world_size)
+    ray.init(address="auto") 
+    trainer = TorchTrainer(
+      train,
+      scaling_config=ScalingConfig(num_workers=16, use_gpu=True),
+    )
+    #rank = int(os.environ["RANK"])
+    #world_size = int(os.environ["WORLD_SIZE"])
+    #train(rank, world_size)
+    result = trainer.fit()
+    print(result.metrics)
