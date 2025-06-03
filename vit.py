@@ -154,9 +154,10 @@ def cleanup():
 def train(config):
     rank = int(os.environ["RANK"])
     world_size = int(os.environ["WORLD_SIZE"])
+    local_rank = int(os.environ.get("LOCAL_RANK", 0))
     setup(rank, world_size)
 
-    device = torch.device(f"cuda:{rank}")
+    device = torch.device(f"cuda:{local_rank}")
     #ds = load_dataset("imagenet-1k",cache_dir="/mnt/data/huggingface",data_dir="/mnt/data")
   
 
