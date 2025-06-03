@@ -182,8 +182,9 @@ def train(config):
     num_epochs = 10000
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print("Using device:", device)
-    model = VisionTransformer(16,256,768,1000).to(device)
-    model = DDP(model, device_ids=[rank])
+    model = VisionTransformer(16,256,768,1000)
+    model = ray.train.torch.prepare_model(model)
+    #model = DDP(model, device_ids=[rank])
     total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
     print(f"Total Trainable Parameters: {total_params:,}")
     accumulation_steps = 2
