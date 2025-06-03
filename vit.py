@@ -143,7 +143,7 @@ def setup(rank, world_size):
     os.environ["MASTER_ADDR"] = os.getenv("MASTER_ADDR", "127.0.0.1")
     os.environ["MASTER_PORT"] = "29500"
     dist.init_process_group("nccl", rank=rank, world_size=world_size)
-    torch.cuda.set_device(rank)
+    #torch.cuda.set_device(rank)
 
 
 def cleanup():
