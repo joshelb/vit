@@ -266,5 +266,5 @@ if __name__ == "__main__":
     #)
     #ds_test = ds_test.shuffle(seed=42)
     #ds_test.save_to_disk("/mnt/mofs3/fs/josh/vit/imagenet_preprocessed_validation")
-    world_size = 1
+    world_size = 16
     mp.spawn(train, args=(world_size,), nprocs=world_size, join=True)
