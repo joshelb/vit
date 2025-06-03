@@ -150,7 +150,9 @@ def setup(rank, world_size):
 def cleanup():
     dist.destroy_process_group()
 
-def train(rank, world_size):
+def train(config):
+    rank = int(os.environ["RANK"])
+    world_size = int(os.environ["WORLD_SIZE"])
     setup(rank, world_size)
 
     device = torch.device(f"cuda:{rank}")
