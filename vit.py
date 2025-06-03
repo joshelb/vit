@@ -222,6 +222,7 @@ def train(config):
             loss = criterion(output, labels)
             loss = loss / accumulation_steps
             writer.add_scalar('loss', loss.item() * accumulation_steps, stepp)
+            writer.flush()
             loss.backward()    
             stepp += 1 
             if stepp % accumulation_steps == 0 and stepp > accumulation_steps:
@@ -231,6 +232,7 @@ def train(config):
                 for param_group in optimizer.param_groups:
                     print("Current learning rate:", param_group['lr'])
                 writer.add_scalar('accumloss', loss.item() * accumulation_steps, stepp/accumulation_steps)
+                writer.flush()
                 scheduler.step()
                 epoch_loss += loss.item()
                 num_batches += 1
@@ -243,6 +245,7 @@ def train(config):
                 validation_loss = criterion(output, labels)
                 validation_stepp += 1
                 writer.add_scalar('validation_loss', validation_loss.item(), validation_stepp)
+                writer.flush()
         if epoch % 5 == 0 and dist.get_rank() == 0: 
             save_checkpoint(model,optimizer,epoch,avg_epoch_loss,f"/data/vit/checkpoints/checkpoint_epoch_{epoch+1}.pt")
   
