@@ -203,7 +203,7 @@ def train(rank, world_size):
     validation_stepp = 0
     for _ in range(int(stepp/accumulation_steps)):
         scheduler.step()
-    writer = SummaryWriter(log_dir="runs/vit_debug")
+    writer = SummaryWriter(log_dir="/data/runs/vit_debug")
     optimizer.zero_grad()
     for epoch in range(num_epochs):
         model.train() 
