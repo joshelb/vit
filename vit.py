@@ -16,7 +16,7 @@ from ray.air.config import ScalingConfig
 
 
 from datasets import load_dataset, load_from_disk
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+device = torch.device(f"cuda:{rank}" if torch.cuda.is_available() else "cpu")
 
 def imgtopatch(x, patch_size):
 
