@@ -140,10 +140,8 @@ class VisionTransformer(torch.nn.Module):
 
 
 def setup(rank, world_size):
-    os.environ["MASTER_ADDR"] = os.getenv("RAY_HEAD_SERVICE_HOST", "127.0.0.1")
-    os.environ["MASTER_PORT"] = "29500"
-    dist.init_process_group("nccl", rank=rank, world_size=world_size)
-    torch.cuda.set_device(rank % 8)
+    dist.init_process_group(backend="nccl", rank=rank, world_size=world_size)
+    torch.cuda.set_device(rank % torch.cuda.device_count())
 
 
 def cleanup():
@@ -266,5 +264,8 @@ if __name__ == "__main__":
     #)
     #ds_test = ds_test.shuffle(seed=42)
     #ds_test.save_to_disk("/mnt/mofs3/fs/josh/vit/imagenet_preprocessed_validation")
-    world_size = 16
-    mp.spawn(train, args=(world_size,), nprocs=world_size, join=True)
+    #world_size = 16
+    #mp.spawn(train, args=(world_size,), nprocs=world_size, join=True)
+    rank = int(os.environ["RANK"])
+    world_size = int(os.environ["WORLD_SIZE"])
+    train(rank, world_size)
